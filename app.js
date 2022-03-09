@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000
 app.use(express.json()) // parses incoming request with JSON payloads (based on body-parser)
 app.use(express.urlencoded({ extended: false }))
 app.use("/", shortenerRouter)
-app.use("/testAPI", redirectRouter)
+// app.use("/testAPI", redirectRouter)
 
 // error handling endware
 app.use((err, req, res, next) => {
