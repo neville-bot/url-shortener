@@ -1,9 +1,13 @@
 // build post route to create new shortnened urls from user input
 const express = require("express")
+const { encode } = require("node-forge/lib/baseN")
 const validUrl = require("valid-url")
-const baseUrl = "deft.com"
 // express route handler
 const router = express.Router()
+// base 62 econder and MD5 hasher instance
+const base62Encoding = require("./config/encoding.js")
+const md = forge.md.md5.create()
+const baseUrl = "deft.com"
 
 router.post("/shorten", async (req, res) => {
   const { longUrl } = req.body
@@ -23,13 +27,20 @@ router.post("/shorten", async (req, res) => {
       // check if url already exists in database
       const urlExists = await Url.findOne({ originalUrl: longUrl })
       if (urlExists) {
-        shortUrl = await generateMD5Url(longUrl + sequence).then((url) =>
-          encode(url)
-        )
+        shortUrl = await md
+          .update(longUrl + sequence)
+          .then(() => {
+            return md.digest().toHex()
+          })
+          .then((url) => {
+            return encode(url)
+          })
         // send response with newly created url
         res.status(201).json(newUrl)
       } else {
-        shortUrl = await generateMD5Url(longUrl).then((url) => encode(url))
+        shortUrl = await generateMD5Url(longUrl).then((url) =>
+          base62Encoding(url)
+        )
       }
       // create new url object
       const newUrl = await Url.create({
