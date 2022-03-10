@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
+const mongoUser = process.env.MONGODB_USER
+const mongoPw = process.env.MONGODB_PW
+const DB_URI =
+  process.env.MONGODB_URI ||
+  `mongodb+srv://${mongoUser}:${mongoPw}@cluster0.ymsqu.mongodb.net/cluster0?retryWrites=true&w=majority`
 
-const DB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/cluster0"
-
-mongoose.connect(DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(DB_URI).catch((error) => console.error(error))
 
 const connection = mongoose.connection
 
