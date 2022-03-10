@@ -4,22 +4,24 @@ const router = express.Router()
 
 router.get("/", (req, res) => {
   res.send(
-    "Please enter a URL to shorten, or api/{your url} to redirect your shortened URL to the original."
+    "Please enter a your shortened URL and you will be redirected to your full URL."
   )
 })
 router.get("/:url", async (req, res) => {
-  console.log("get eem redirect route")
   const url = req.params.url
+  console.log(url)
   try {
-    const originalUrl = await Url.findOne({ originalUrl: url })
     const redirectUrl = await Url.findOne({ shortUrl: url })
-    if (originalUrl) {
-      const shortUrl = originalUrl.shortUrl
-      res.send(shortUrl)
-    } else if (redirectUrl) {
-      res.send("Successfully redirected to your URL")
+    console.log("redirect url", redirectUrl)
+    if (redirectUrl) {
+      const ogUrl = redirectUrl.originalUrl
+      res.send(`Your old URL is: ${ogUrl}`)
     } else {
-      res.status(404).send("Please enter the correct URL!")
+      res
+        .status(404)
+        .send(
+          "Please enter the 7 alphanumeric characters of your shortened URL."
+        )
     }
   } catch (err) {
     console.error(err)

@@ -7,18 +7,18 @@ const validator = require("validator")
 const router = express.Router()
 // MD5 hasher instance
 const md = forge.md.md5.create()
-const baseUrl = "http://localhost:5000"
+const baseUrl = "localhost:5000"
 
 router.get("/", (req, res) => {
   res.send(
-    "Please enter a URL to shorten, and it will be rendered on the page."
+    "Please enter a URL to be shortened, and it will be rendered on the page."
   )
 })
 router.post("/:url", async (req, res) => {
   const longUrl = req.params.url
   // check if base API url is valid (for eventual deployment)
   if (
-    !validator.isURL(baseUrl, { require_protocol: true, require_tld: false })
+    !validator.isURL(baseUrl, { require_protocol: false, require_tld: false })
   ) {
     return res
       .status(500)
@@ -34,7 +34,6 @@ router.post("/:url", async (req, res) => {
     try {
       // check if url already exists in database
       const urlExists = await Url.findOne({ originalUrl: longUrl })
-      console.log("url exists", urlExists)
       if (urlExists) {
         shortUrl = md.update(longUrl + sequence)
         sequence++
@@ -50,14 +49,14 @@ router.post("/:url", async (req, res) => {
       // create new url object
       const newUrl = await Url.create({
         originalUrl: longUrl,
-        shortUrl: baseUrl + "/" + encodedUrl,
+        shortUrl: encodedUrl,
         userID: 1,
         createdAt: Date.now(),
         expirationDate: req.body.expirationDate,
       })
       // save in DB send response with newly created url
       await newUrl.save()
-      res.status(201).json(newUrl)
+      res.status(201).json(`Your new URL is: ${baseUrl}/${newUrl.shortUrl}`)
     } catch (err) {
       res.status(500).json({ error: err.message })
     }
