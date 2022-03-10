@@ -13,4 +13,4 @@ function base62(n) {
   return `${base62Num}`
 }
 
-module.exports = encoding
+module.exports = base62
