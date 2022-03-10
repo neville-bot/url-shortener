@@ -1,62 +1,57 @@
 // build post route to create new shortnened urls from user input
 const express = require("express")
+const Url = require("../models/Urlmodel")
 const forge = require("node-forge")
-const validUrl = require("valid-url")
+const validator = require("validator")
 // express route handler
 const router = express.Router()
 // MD5 hasher instance
 const md = forge.md.md5.create()
-const baseUrl = "https://www.deft.com"
+const baseUrl = "http://localhost:5000"
 
-router.post("/:shorten", async (req, res) => {
-  const { longUrl } = req.params.shorten
+router.get("/", (req, res) => {
+  res.send(
+    "Please enter a URL to shorten, and it will be rendered on the page."
+  )
+})
+router.post("/:url", async (req, res) => {
+  const longUrl = req.params.url
   // check if base API url is valid (for eventual deployment)
-  if (!validUrl.isUri(baseUrl)) {
-    return res.status(400).json({ error: "Invalid URL" })
+  if (
+    !validator.isURL(baseUrl, { require_protocol: true, require_tld: false })
+  ) {
+    return res
+      .status(500)
+      .json({ error: "Server error, base URL is not valid" })
   }
   // generate random string (7 characters) MD5 hash, first seven letters + counter,
   // then run through base 62 conversion to get a short URL
   // counter is incremented by 1 each time a new url is created
   let shortUrl
   let sequence = 1
-
   // check if user inputted url is valid
-  if (validUrl.isUri(longUrl)) {
+  if (validator.isURL(longUrl, { require_protocol: false })) {
     try {
       // check if url already exists in database
       const urlExists = await Url.findOne({ originalUrl: longUrl })
+      console.log("url exists", urlExists)
       if (urlExists) {
-        shortUrl = await forge.md
-          .update(longUrl + sequence)
-          .then(() => {
-            return forge.md.digest().toHex()
-          })
-          .then((hex) => {
-            const bytes = forge.util.hexToBytes(hex)
-            const encodedUrl = forge.util.encode64(bytes)
-            if (encodedUrl.length > 7) {
-              encodedUrl = encodedUrl.slice(0, 7)
-            }
-          })
+        shortUrl = md.update(longUrl + sequence)
+        sequence++
       } else {
-        shortUrl = await forge.md
-          .update(longUrl + sequence)
-          .then(() => {
-            return forge.md.digest().toHex()
-          })
-          .then((hex) => {
-            const bytes = forge.util.hexToBytes(hex)
-            const encodedUrl = forge.util.encode64(bytes)
-            if (encodedUrl.length > 7) {
-              encodedUrl = encodedUrl.slice(0, 7)
-            }
-          })
+        shortUrl = md.update(longUrl)
+      }
+      const hex = md.digest().toHex()
+      const bytes = forge.util.hexToBytes(hex)
+      let encodedUrl = forge.util.encode64(bytes)
+      if (encodedUrl.length > 7) {
+        encodedUrl = encodedUrl.slice(0, 7)
       }
       // create new url object
       const newUrl = await Url.create({
         originalUrl: longUrl,
-        shortUrl: baseUrl + "/" + shortUrl,
-        userID: req.user.userID,
+        shortUrl: baseUrl + "/" + encodedUrl,
+        userID: 1,
         createdAt: Date.now(),
         expirationDate: req.body.expirationDate,
       })
@@ -67,7 +62,12 @@ router.post("/:shorten", async (req, res) => {
       res.status(500).json({ error: err.message })
     }
   } else {
-    res.status(400).json({ error: "Invalid URL" })
+    res
+      .status(400)
+      .send(
+        "Please enter properly formatted web address, i.e. tld.domain.subdomin, you entered: " +
+          longUrl
+      )
   }
 })
 

@@ -16,8 +16,8 @@ connection.on("error", (err) => {
 // middleware
 app.use(express.json()) // parses incoming request with JSON payloads (based on body-parser)
 app.use(express.urlencoded({ extended: false }))
-app.use("/", redirectRouter)
-app.use("/api/url", shortenerRouter)
+app.use("/short", redirectRouter)
+app.use("/long", shortenerRouter)
 
 // error handling endware
 app.use((err, req, res, next) => {
