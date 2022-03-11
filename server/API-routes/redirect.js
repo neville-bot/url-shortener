@@ -9,10 +9,8 @@ router.get("/", (req, res) => {
 })
 router.get("/:url", async (req, res) => {
   const url = req.params.url
-  console.log(url)
   try {
     const redirectUrl = await Url.findOne({ shortUrl: url })
-    console.log("redirect url", redirectUrl)
     if (redirectUrl) {
       const ogUrl = redirectUrl.originalUrl
       res.send(`Your old URL is: ${ogUrl}`)
@@ -25,7 +23,7 @@ router.get("/:url", async (req, res) => {
     }
   } catch (err) {
     console.error(err)
-    res.status(400).json({ error: err.message })
+    res.status(500).json({ error: err.message })
   }
 })
 

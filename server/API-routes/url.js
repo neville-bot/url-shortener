@@ -52,7 +52,7 @@ router.post("/:url", async (req, res) => {
         shortUrl: encodedUrl,
         userID: 1,
         createdAt: Date.now(),
-        expirationDate: req.body.expirationDate,
+        expirationDate: new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000),
       })
       // save in DB send response with newly created url
       await newUrl.save()

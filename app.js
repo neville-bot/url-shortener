@@ -3,6 +3,7 @@ const shortenerRouter = require("./server/API-routes/url.js")
 const redirectRouter = require("./server/API-routes/redirect.js")
 const app = express()
 const PORT = process.env.PORT || 5000
+const dbName = "Cluster0"
 require("dotenv").config()
 // DB connection
 const connection = require("./server/config/db.config.js")
