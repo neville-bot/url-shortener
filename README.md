@@ -26,7 +26,7 @@ This library has an extensive isURL() method where I customized the constraints 
 
 ### Storage
 
-To create unique IDs, I used node-forge's MD5 algortihm, then used base64 encoding and took the first 7 letters from the string. A 7 letters long key would result in 64^7 = ~4.3 trillion possible strings.
+To create unique IDs, I used node-forge's MD5 algortihm, then used base64 encoding and took the first 7 letters from the string. A 7 letter long key would result in 64^7 = ~4.3 trillion possible strings.
 Given the possible massive storage and lack of relationship between tables, I opted to use the noSQL database mongoDB, in conjunction with mongoose. MongoDB makes it easy to scale, and eventually a load balancer could be put between the server and databases and route the heavy read requests.
 
 ### Later Additions
