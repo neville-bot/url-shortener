@@ -3,8 +3,7 @@ URL-sortener is a server based application with simple features, including reduc
 receive your full-length URL. And a POST /short/ endpoint to send your full-length URL, and receive a shortened URL.
 
 # Running the application
-To run this application, you can fork this repo and npm install. Create a cluster with Mongodb Atlas(cloud server), and enter your credentials (as MONGODB_USER and MONGODB_PW) into a .env file at the root of the application. You can then run a local server by typing in the command 'npm start'. Use postman or the command line
-to make post requests to localhost:5000/short/(url here). Then you can view the shortened URLs in your browser and in Atlas. Enter the encoded 7 letter value into the endpoint localhost:5000/long/(encoded value here) and you will receive your full URL back.
+To run this application, you can fork this repo and npm install. Using Mongodb Atlas(cloud server) guest credentials (as MONGODB_USER="deft-user" and MONGODB_PW="access-approved") into a .env file at the root of the application. You can then run a local server by typing in the command 'npm start'. Use postman or the command line to make post requests to localhost:5000/short/(url here). Then you can view the shortened URLs in your browser or on Postman. Copy the encoded 7 letter value into the endpoint localhost:5000/long/(encoded value here) and you will receive your full URL back.
 
 ## Technologies Used
 
