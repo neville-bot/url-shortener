@@ -1,5 +1,5 @@
 # url-shortener
-URL-sortener is a server based application with simple features, including reducing a full length URL to an encoded 7 letter shortened URL, and sending back that 7 letter query to get the full-length URL. The application is accessible through two endpoints. A GET /long/ endpoint where you can send your shortened URL, and 
+URL-shortener is a server based application with simple features, including reducing a full length URL to an encoded 7 letter shortened URL, and sending back that 7 letter query to get the full-length URL. The application is accessible through two endpoints. A GET /long/ endpoint where you can send your shortened URL, and 
 receive your full-length URL. And a POST /short/ endpoint to send your full-length URL, and receive a shortened URL.
 
 # Running the application
