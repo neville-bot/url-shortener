@@ -32,9 +32,10 @@ Given the possible massive storage and lack of relationship between tables, I op
 
 ### Later Additions
 
+* A counter collection to properly sequence duplicate URLs, reducing possible collisions.
 * FE login and form to send and receive data.
-* Deployment to Heroku 
-* Functionality to delete expired URLs
+* Deployment to Heroku.
+* Functionality to delete expired URLs.
 
 
  
