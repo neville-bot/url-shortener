@@ -70,4 +70,8 @@ router.post("/:url", async (req, res) => {
   }
 })
 
+router.post("/:long//:wrongURL", (req, res) => {
+  res.send("Please enter a valid URL (no spaces or protocol)")
+})
+
 module.exports = router
